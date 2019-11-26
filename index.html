@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>EasyList - Single URL for your Bunq Data</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <a class="btn btn-info" role="button" id="btn">Create Hyperlink</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          <a id="url_csv" target="_blank" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          <a id="url_json" target="_blank" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+var getUrlParameter = function getUrlParameter(sParam) {
+  var sPageURL = window.location.search.substring(1),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+    sParameterName = sURLVariables[i].split('=');
+
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+    }
+  }
+};
+
+$(window).on('load', function() {
+  var guid = getUrlParameter("state");
+  if (!guid) {
+    guid = getUrlParameter("guid");
+  }
+  var code = getUrlParameter("code");
+
+  $.getJSON({url: 'backend?code=' + code + '&guid=' + guid, 
+             success: function(result) {
+    if (result["success"] === "success") {
+      var csv_url = 'https://easylist.aule.net/generate?guid=' + guid;
+      $('#url_csv').text(csv_url);
+      $('#url_csv').attr("href", csv_url);
+      var json_url = 'https://easylist.aule.net/json?guid=' + guid;
+      $('#url_json').text(json_url);
+      $('#url_json').attr("href", json_url);
+    }
+  }});
+
+  $.getJSON({url: 'backend?get_guid=1', success: function(result) {
+    var url = 'https://oauth.bunq.com/auth?' +
+              'response_type=code&' +
+              'client_id=88ad9f89f0081f7d17a9552a7ff8403b48882a521dcd5a7d7229aab16e721386&' +
+              'redirect_uri=https://easylist.aule.net/&' +
+              'state=' + result["new_guid"];
+    $('#btn').attr('href', url);
+  }});
+});
+
+    </script>
+  </body>
+</html>
