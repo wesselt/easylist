@@ -34,11 +34,12 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 -- Name: get_row(text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.get_row(par_guid text) RETURNS TABLE(guid text, bearer text, private_key text, installation_token text, session_token text)
+CREATE FUNCTION public.get_row(par_guid text) RETURNS TABLE(guid text, code text, bearer text, private_key text, installation_token text, session_token text)
     LANGUAGE plpgsql SECURITY DEFINER
     AS $$begin
 return query
     select  t.guid
+    ,       t.code
     ,       t.bearer
     ,       t.private_key
     ,       t.installation_token
@@ -52,18 +53,21 @@ end$$;
 ALTER FUNCTION public.get_row(par_guid text) OWNER TO postgres;
 
 --
--- Name: put_row(text, text, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
+-- Name: put_row(text, text, text, text, text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.put_row(par_guid text, par_bearer text, par_private_key text, par_installation_token text, par_session_token text) RETURNS integer
+CREATE FUNCTION public.put_row(par_guid text, par_code text, par_bearer text, par_private_key text, par_installation_token text, par_session_token text) RETURNS integer
     LANGUAGE plpgsql SECURITY DEFINER
     AS $$begin
 insert into tokens
-    (guid, bearer, private_key, installation_token, session_token)
-    values (par_guid, par_bearer, par_private_key, par_installation_token, 
-            par_session_token)
+            (guid, code, bearer, private_key, installation_token,
+             session_token, created, updated)
+    values  (par_guid, par_code, par_bearer, par_private_key,
+             par_installation_token, par_session_token, now(), now())
     on conflict (guid) do
         update set
+            updated = now(),
+            code = par_code,
             bearer = par_bearer,
             private_key = par_private_key,
             installation_token = par_installation_token,
@@ -74,7 +78,7 @@ return 1
 end$$;
 
 
-ALTER FUNCTION public.put_row(par_guid text, par_bearer text, par_private_key text, par_installation_token text, par_session_token text) OWNER TO postgres;
+ALTER FUNCTION public.put_row(par_guid text, par_code text, par_bearer text, par_private_key text, par_installation_token text, par_session_token text) OWNER TO postgres;
 
 SET default_tablespace = '';
 
@@ -90,7 +94,10 @@ CREATE TABLE public.tokens (
     bearer text,
     private_key text,
     installation_token text,
-    session_token text
+    session_token text,
+    created timestamp without time zone,
+    updated timestamp without time zone,
+    code text
 );
 
 
@@ -131,13 +138,6 @@ ALTER TABLE ONLY public.tokens ALTER COLUMN id SET DEFAULT nextval('public.token
 
 ALTER TABLE ONLY public.tokens
     ADD CONSTRAINT tokens_pkey PRIMARY KEY (guid);
-
-
---
--- Name: FUNCTION put_row(par_guid text, par_bearer text, par_private_key text, par_installation_token text, par_session_token text); Type: ACL; Schema: public; Owner: postgres
---
-
-GRANT ALL ON FUNCTION public.put_row(par_guid text, par_bearer text, par_private_key text, par_installation_token text, par_session_token text) TO backend;
 
 
 --

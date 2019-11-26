@@ -50,9 +50,12 @@ def get_transactions(row):
 
 
 def application(env, start_response):
-    start_response('200 OK', [('Content-Type','text/json')])
+    start_response('200 OK', [
+        ('Content-Type','text/json'),
+        ('Content-Disposition', 'inline; filename="easylist.json"'),
+    ])
     d = parse_qs(env["QUERY_STRING"])
-    guid = d["guid"]
+    guid = d["guid"][0]
     row = db.get_row(guid)
     result = get_transactions(row)
     db.put_row(row)

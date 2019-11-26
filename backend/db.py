@@ -13,17 +13,21 @@ def get_cursor():
  
 def get_row(guid):
     cur = get_cursor()
-    cur.execute("select * from get_row(%s)", (guid))
-    return cur.fetchall()[0]
+    cur.execute("select * from get_row(%s)", (guid, ))
+    rows = cur.fetchall()
+    if not rows:
+      return None
+    return rows[0]
 
 
 def put_row(row):
     cur = get_cursor()
-    #print(f"saving row {row}")
-    return cur.execute("select put_row(%s, %s, %s, %s, %s)", (
-        row["guid"], 
-        row["bearer"], 
+    print(f"saving row {row}")
+    return cur.execute("select put_row(%s, %s, %s, %s, %s, %s)", (
+        row["guid"],
+        row.get("code"),
+        row.get("bearer"),
         row.get("private_key"),
         row.get("installation_token"),
-        row.get("session_token")
+        row.get("session_token"),
     ))
