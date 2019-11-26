@@ -54,7 +54,7 @@ def application(env, start_response):
         if code:
             row["code"] = code
         db.put_row(row)
-    if not row["bearer"]:
+    if not row.get("bearer"):
         if not code:
             return error("Parameter code required for guid without bearer")
         url = "https://api.oauth.bunq.com/v1/token"
@@ -72,6 +72,6 @@ def application(env, start_response):
                                 "raw_reply": response}).encode()]
         row["bearer"] = response["access_token"]
         db.put_row(row)
-    if not row["bearer"]:
+    if not row.get("bearer"):
         return [json.dumps({"success": "ok"}).encode()]
     return [json.dumps({"success": "success"}).encode()]
