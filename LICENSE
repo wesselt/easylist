@@ -1,5 +1,5 @@
-Tooling to read transactions from BUNQ (https://www.bunq.com/nl/)
-and upload them to YNAB (https://www.youneedabudget.com)
+Tooling to simplify reading transactions from the BUNQ API
+(https://www.bunq.com/nl/)
 
 Copyright (C) 2018 and later   wesselt@github
 

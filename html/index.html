@@ -41,7 +41,7 @@
           <a class="btn btn-info" role="button" id="btn">Request My Personal URL</a>
         </div>
       </div>
-      <div class="row" id="row_csv" style="visibility: hidden; ">
+      <div class="row" id="row_csv" style="display: none; ">
         <div class="col-xs">
           <br/>
           <br/>
@@ -51,11 +51,18 @@
           </a>
         </div>
       </div>
-      <div class="row" id="row_json" style="visibility: hidden; ">
+      <div class="row" id="row_json" style="display: none; ">
         <div class="col-xs">
           <a id="url_json" target="_blank">
             <img src="img/json.png">
           </a>
+        </div>
+      </div>
+      <div class="row">
+        <div style="color:gray; ">
+        <br/>
+        <br/>
+        <a href="https://github.com/wesselt/easylist">Source code available at github.</a>
         </div>
       </div>
     </div>
@@ -99,7 +106,7 @@ $(window).on('load', function() {
       var json_url = 'https://easylist.aule.net/json?guid=' + guid;
       $('#url_json').append(json_url);
       $('#url_json').attr("href", json_url);
-      $('#row_csv, #row_json').css('visibility', 'visible');
+      $('#row_csv, #row_json').css('display', 'block');
     }
   }});
 
