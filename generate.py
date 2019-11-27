@@ -13,7 +13,7 @@ bunq.set_log_level(0)
 
 def process_account(row, user_id, account_id):
     result = ""
-    method = ("v1/user/{0}/monetary-account/{1}/payment?count=24"
+    method = ("v1/user/{0}/monetary-account/{1}/payment?count=128"
               .format(user_id, account_id))
     payments = bunq.get(row, method)
     for v in [p["Payment"] for p in payments]:
