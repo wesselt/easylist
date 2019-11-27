@@ -13,20 +13,49 @@
   <body>
     <div class="container">
       <div class="row">
-        <div class="col-sm">
-          <a class="btn btn-info" role="button" id="btn">Create Hyperlink</a>
+        <div class="col-xs">
+          <br/>
+          <h5>Example self-updating Google sheet with the importdata function:</h5>
+          <br/>
+          <img src="img//google-sheet-importdata.png" width="800px"/>
         </div>
       </div>
       <div class="row">
-        <div class="col-sm">
-          <img src="img/csv.png">
-          <a id="url_csv" target="_blank" />
+        <div class="col-xs">
+          <br/>
+          <h5>Example Python script with the requests library:</h5>
+          <br/>
+          <img src="img/python-requests.png" width="800px" />
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm">
-          <img src="img/json.png">
-          <a id="url_json" target="_blank" />
+       <div class="row">
+        <div class="col-xs">
+          <br/>
+          <list>
+          <li>You'll be redirected to BUNQ for approval</li>
+          <li>Grant access to one or more accounts using the BUNQ app</li>
+          <li>A URL will be created for you</li>
+          <li>Anyone with the URL can request transactions</li>
+          </list>
+          <br/>
+          <a class="btn btn-info" role="button" id="btn">Request My Personal URL</a>
+        </div>
+      </div>
+      <div class="row" id="row_csv" style="visibility: hidden; ">
+        <div class="col-xs">
+          <br/>
+          <br/>
+          <h5>Here are your hyperlinks!  The first returns a CSV file, the second returns JSON.</h5>
+          <a id="url_csv" target="_blank">
+            <img src="img/csv.png">
+          </a>
+        </div>
+      </div>
+      <div class="row" id="row_json" style="visibility: hidden; ">
+        <div class="col-xs">
+          <a id="url_json" target="_blank">
+            <img src="img/json.png">
+          </a>
         </div>
       </div>
     </div>
@@ -65,11 +94,12 @@ $(window).on('load', function() {
              success: function(result) {
     if (result["success"] === "success") {
       var csv_url = 'https://easylist.aule.net/generate?guid=' + guid;
-      $('#url_csv').text(csv_url);
+      $('#url_csv').append(csv_url);
       $('#url_csv').attr("href", csv_url);
       var json_url = 'https://easylist.aule.net/json?guid=' + guid;
-      $('#url_json').text(json_url);
+      $('#url_json').append(json_url);
       $('#url_json').attr("href", json_url);
+      $('#row_csv, #row_json').css('visibility', 'visible');
     }
   }});
 
