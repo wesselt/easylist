@@ -1,6 +1,7 @@
 import json
 import requests
 import sys
+import threading
 from cgi import parse_qs
 
 import bunq
@@ -14,10 +15,9 @@ def error(message):
 
 
 def prefetch_session(row):
-    print("Prefetching session {row}")
-    bunq.get_session(row)
-    db.put_row(row)
-    print("Prefetched session {row}")
+    print(f"Prefetching {row['guid']}...")
+    bunq.get_session_token(row)
+    print(f"Done prefetching {row['guid']}")
 
 
 def application(env, start_response):
@@ -27,7 +27,8 @@ def application(env, start_response):
         guid = guidhelper.new_guid()
         return [json.dumps({
             "new_guid": guidhelper.new_guid(),
-            "url": settings.get_url()
+            "client_id": settings.get_client_id(),
+            "url": settings.get_url(),
         }).encode()]
     if "guid" not in d:
         return error("Parameter guid required")
@@ -36,10 +37,8 @@ def application(env, start_response):
         return error("Parameter guid must be a valid guid")
     code = d["code"][0] if "code" in d else ""
     row = db.get_row(guid)
-    if not row:
-        row = {"guid": guid}
-        if code:
-            row["code"] = code
+    if code and not row["code"]:
+        row["code"] = code
         db.put_row(row)
     if not row.get("bearer"):
         if not code:
@@ -49,7 +48,7 @@ def application(env, start_response):
             "grant_type": "authorization_code",
             "code": code,
             "redirect_uri": settings.get_url(),
-            "client_id": "88ad9f89f0081f7d17a9552a7ff8403b48882a521dcd5a7d7229aab16e721386",
+            "client_id": settings.get_client_id(),
             "client_secret": settings.get_client_secret()
         }).json()
         if "error" in response:

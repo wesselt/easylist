@@ -1,3 +1,6 @@
+def get_client_id():
+    return "your client id here"
+
 def get_client_secret():
     return "your client secret here"
 

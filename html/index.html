@@ -59,8 +59,7 @@
           </a>
           <br/>
           <br/>
-          <a class="btn btn-info" role="button" 
-             href="https://easylist.aule.net">Home</a>
+          <a class="btn btn-info" role="button" id="home">Home</a>
         </div>
       </div>
       <div class="row">
@@ -104,40 +103,42 @@ $(window).on('load', function() {
   var error = getUrlParameter("error");
   if (error) {
     alert("<strong>An error occured:</strong> " + error);
-  } else {
-    var guid = getUrlParameter("state");
-    if (!guid) {
-      guid = getUrlParameter("guid");
-    }
-    var code = getUrlParameter("code");
-    if (code) {
-      $.getJSON({url: 'backend?code=' + code + '&guid=' + guid, 
-                 success: function(result) {
-        if (result["success"] === "success") {
-          var csv_url = 'https://easylist.aule.net/generate?guid=' + guid;
-          $('#url_csv').append(csv_url);
-          $('#url_csv').attr("href", csv_url);
-          var json_url = 'https://easylist.aule.net/json?guid=' + guid;
-          $('#url_json').append(json_url);
-          $('#url_json').attr("href", json_url);
-          $('#row_sheet, #row_python, #row_button').css('display', 'none');
-          $('#row_urls').css('display', 'block');
-        } else {
-          alert(result["error"]);
-        }
-      }});
-    }
   }
-
-  $.getJSON('backend?get_guid=1', function(result) {
+  $.getJSON('backend?get_config=1', function(config) {
     var url = 'https://oauth.bunq.com/auth?' +
               'response_type=code&' +
-              'client_id=88ad9f89f0081f7d17a9552a7ff8403b48882a521dcd5a7d7229aab16e721386&' +
-              'redirect_uri=https://easylist.aule.net/&' +
-              'state=' + result["new_guid"];
+              'client_id=' + config["client_id"] + '&' +
+              'redirect_uri=' + config["url"] + '&' +
+              'state=' + config["new_guid"];
     $('#btn').attr('href', url);
+    $('#home').attr('href', config["url"]);
+
+    if (!error) {
+      var guid = getUrlParameter("state");
+      if (!guid) {
+        guid = getUrlParameter("guid");
+      }
+      var code = getUrlParameter("code");
+      if (code) {
+        $.getJSON({url: 'backend?code=' + code + '&guid=' + guid, 
+                   success: function(result) {
+          if (result["success"] === "success") {
+            var csv_url = config["url"] + 'generate?guid=' + guid;
+            $('#url_csv').append(csv_url);
+            $('#url_csv').attr("href", csv_url);
+            var json_url = config["url"] + 'json?guid=' + guid;
+            $('#url_json').append(json_url);
+            $('#url_json').attr("href", json_url);
+            $('#row_sheet, #row_python, #row_button').css('display', 'none');
+            $('#row_urls').css('display', 'block');
+          } else {
+            alert(result["error"]);
+          }
+        }});
+      }
+    }
   }).fail(function() {
-    alert("Failed to retrieve guid");
+    alert("Failed to retrieve config");
   });
 });
 

@@ -6,6 +6,7 @@ import requests
 import socket
 import sys
 
+import db
 
 url = "https://api.bunq.com/"
 
@@ -25,6 +26,7 @@ def get_private_key(row):
     key.generate_key(crypto.TYPE_RSA, 2048)
     pem = crypto.dump_privatekey(crypto.FILETYPE_PEM, key)
     row["private_key"] = pem.decode("utf-8")
+    db.put_row(row)
     return key
 
 
@@ -37,7 +39,7 @@ def get_public_key(row):
 def get_installation_token(row):
     token = row["installation_token"]
     if token:
-        return token.rstrip("\r\n")
+        return token
     print("Requesting installation token...")
     public_key = get_public_key(row)
     pem = crypto.dump_publickey(crypto.FILETYPE_PEM, public_key)
@@ -54,6 +56,7 @@ def get_installation_token(row):
         raise Exception("No token returned by installation")
     row["installation_token"] = installation_token
     register_device(row)
+    db.put_row(row)
     return installation_token
 
 
@@ -86,6 +89,7 @@ def get_session_token(row):
     if not session_token:
         raise Exception("No token returned by session-server")
     row["session_token"] = session_token
+    db.put_row(row)
     return session_token
 
 
@@ -170,11 +174,12 @@ def call(row, action, method, data=None):
     result = call_requests(row, action, method, data)
     if isinstance(result, str):
         return result
-    if ("Error" in result and
-            result["Error"][0]["error_description"]
-            == "Insufficient authorisation."):
+    if ("Error" in result and result["Error"][0]["error_description"] in (
+            "Insufficient authorisation.",
+            "Insufficient authentication.")):
         row["session_token"] = ""
-        result = call_requests(action, method, data)
+        print("Clearing session token...")
+        result = call_requests(row, action, method, data)
         if isinstance(result, str):
             return result
     if "Error" in result:
