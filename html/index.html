@@ -129,14 +129,16 @@ $(window).on('load', function() {
     }
   }
 
-  $.getJSON({url: 'backend?get_guid=1', success: function(result) {
+  $.getJSON('backend?get_guid=1', function(result) {
     var url = 'https://oauth.bunq.com/auth?' +
               'response_type=code&' +
               'client_id=88ad9f89f0081f7d17a9552a7ff8403b48882a521dcd5a7d7229aab16e721386&' +
               'redirect_uri=https://easylist.aule.net/&' +
               'state=' + result["new_guid"];
     $('#btn').attr('href', url);
-  }});
+  }).fail(function() {
+    alert("Failed to retrieve guid");
+  });
 });
 
     </script>

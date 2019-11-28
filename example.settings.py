@@ -3,3 +3,6 @@ def get_client_secret():
 
 def get_db_password():
    return "your db password here"
+
+def get_url():
+   return "your url here"
