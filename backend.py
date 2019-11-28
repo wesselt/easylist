@@ -72,6 +72,4 @@ def application(env, start_response):
                                 "raw_reply": response}).encode()]
         row["bearer"] = response["access_token"]
         db.put_row(row)
-    if not row.get("bearer"):
-        return [json.dumps({"success": "ok"}).encode()]
     return [json.dumps({"success": "success"}).encode()]
