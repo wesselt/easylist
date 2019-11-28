@@ -11,8 +11,12 @@
     <title>EasyList - Single URL for your Bunq Data</title>
   </head>
   <body>
+    <div class="alert alert-warning" role="alert" id="div_alert"
+        style="display: none; ">
+      <div id="alert_text"></div>
+    </div>
     <div class="container">
-      <div class="row">
+      <div class="row" id="row_sheet">
         <div class="col-xs">
           <br/>
           <h5>Example self-updating Google sheet with the importdata function:</h5>
@@ -20,7 +24,7 @@
           <img src="img//google-sheet-importdata.png" width="800px"/>
         </div>
       </div>
-      <div class="row">
+      <div class="row" id="row_python">
         <div class="col-xs">
           <br/>
           <h5>Example Python script with the requests library:</h5>
@@ -28,7 +32,7 @@
           <img src="img/python-requests.png" width="800px" />
         </div>
       </div>
-       <div class="row">
+       <div class="row" id="row_button">
         <div class="col-xs">
           <br/>
           <list>
@@ -41,7 +45,7 @@
           <a class="btn btn-info" role="button" id="btn">Request My Personal URL</a>
         </div>
       </div>
-      <div class="row" id="row_csv" style="display: none; ">
+      <div class="row" id="row_urls" style="display: none; ">
         <div class="col-xs">
           <br/>
           <br/>
@@ -49,13 +53,14 @@
           <a id="url_csv" target="_blank">
             <img src="img/csv.png">
           </a>
-        </div>
-      </div>
-      <div class="row" id="row_json" style="display: none; ">
-        <div class="col-xs">
+          <br/>
           <a id="url_json" target="_blank">
             <img src="img/json.png">
           </a>
+          <br/>
+          <br/>
+          <a class="btn btn-info" role="button" 
+             href="https://easylist.aule.net">Home</a>
         </div>
       </div>
       <div class="row">
@@ -90,25 +95,39 @@ var getUrlParameter = function getUrlParameter(sParam) {
   }
 };
 
-$(window).on('load', function() {
-  var guid = getUrlParameter("state");
-  if (!guid) {
-    guid = getUrlParameter("guid");
-  }
-  var code = getUrlParameter("code");
+var alert = function(msg) {
+  $('#alert_text').html(msg);
+  $('#div_alert').css('display', 'block');
+}
 
-  $.getJSON({url: 'backend?code=' + code + '&guid=' + guid, 
-             success: function(result) {
-    if (result["success"] === "success") {
-      var csv_url = 'https://easylist.aule.net/generate?guid=' + guid;
-      $('#url_csv').append(csv_url);
-      $('#url_csv').attr("href", csv_url);
-      var json_url = 'https://easylist.aule.net/json?guid=' + guid;
-      $('#url_json').append(json_url);
-      $('#url_json').attr("href", json_url);
-      $('#row_csv, #row_json').css('display', 'block');
+$(window).on('load', function() {
+  var error = getUrlParameter("error");
+  if (error) {
+    alert("<strong>An error occured:</strong> " + error);
+  } else {
+    var guid = getUrlParameter("state");
+    if (!guid) {
+      guid = getUrlParameter("guid");
     }
-  }});
+    var code = getUrlParameter("code");
+    if (code) {
+      $.getJSON({url: 'backend?code=' + code + '&guid=' + guid, 
+                 success: function(result) {
+        if (result["success"] === "success") {
+          var csv_url = 'https://easylist.aule.net/generate?guid=' + guid;
+          $('#url_csv').append(csv_url);
+          $('#url_csv').attr("href", csv_url);
+          var json_url = 'https://easylist.aule.net/json?guid=' + guid;
+          $('#url_json').append(json_url);
+          $('#url_json').attr("href", json_url);
+          $('#row_sheet, #row_python, #row_button').css('display', 'none');
+          $('#row_urls').css('display', 'block');
+        } else {
+          alert(result["error"]);
+        }
+      }});
+    }
+  }
 
   $.getJSON({url: 'backend?get_guid=1', success: function(result) {
     var url = 'https://oauth.bunq.com/auth?' +
