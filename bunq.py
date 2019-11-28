@@ -6,8 +6,6 @@ import requests
 import socket
 import sys
 
-import network
-
 
 url = "https://api.bunq.com/"
 
@@ -60,7 +58,7 @@ def get_installation_token(row):
 
 
 def register_device(row):
-    ip = network.get_public_ip()
+    ip = "172.105.76.249"
     print("Registering IP " + ip)
     method = "v1/device-server"
     data = {
