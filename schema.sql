@@ -58,23 +58,58 @@ ALTER FUNCTION public.get_row(par_guid text) OWNER TO postgres;
 
 CREATE FUNCTION public.put_row(par_guid text, par_code text, par_bearer text, par_private_key text, par_installation_token text, par_session_token text) RETURNS integer
     LANGUAGE plpgsql SECURITY DEFINER
-    AS $$begin
-insert into tokens
-            (guid, code, bearer, private_key, installation_token,
-             session_token, created, updated)
-    values  (par_guid, par_code, par_bearer, par_private_key,
-             par_installation_token, par_session_token, now(), now())
-    on conflict (guid) do
-        update set
-            updated = now(),
-            code = par_code,
-            bearer = par_bearer,
-            private_key = par_private_key,
-            installation_token = par_installation_token,
-            session_token = par_session_token
-;
-return 1
-;
+    AS $$
+declare
+    token record;
+    break boolean;
+begin
+    select * into token from tokens where guid = par_guid;
+    if token.guid is null then
+        insert into tokens
+                (guid, code, bearer, private_key, installation_token,
+                 session_token, created, updated)
+        values  (par_guid, par_code, par_bearer, par_private_key,
+                 par_installation_token, par_session_token, now(), now());
+        return 2;
+    end if;
+
+    -- Only session token can be overwritten
+    if token.code <> par_code or
+       token.bearer <> par_bearer or
+       token.private_key <> par_private_key or
+       token.installation_token <> par_installation_token then
+        return -1;
+    end if;
+
+    -- Accept updates only if previous step was set as well
+    if token.code is null then
+        token.code = par_code;
+    end if;
+    if token.bearer is null and par_code is not null then
+        raise notice 'I got here';
+        token.bearer = par_bearer;
+    end if;
+    if token.private_key is null and par_bearer is not null then
+        token.private_key = par_private_key;
+    end if;
+    if token.installation_token is null and par_private_key is not null then
+        token.installation_token = par_installation_token;
+    end if;
+    if par_installation_token is not null then
+        token.session_token = par_session_token;
+    end if;
+
+    update  tokens
+    set     updated = now()
+    ,       code = token.code
+    ,       bearer = token.bearer
+    ,       private_key = token.private_key
+    ,       installation_token = token.installation_token
+    ,       session_token = token.session_token
+    where   guid = par_guid
+    ;
+    return 1
+    ;
 end$$;
 
 
