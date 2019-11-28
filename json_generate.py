@@ -6,6 +6,7 @@ from cgi import parse_qs
 
 import bunq
 import db
+import guidhelper
 
 
 bunq.set_log_level(0)
@@ -49,14 +50,25 @@ def get_transactions(row):
     return result
 
 
+def error(message):
+    return [json.dumps({"error": message}).encode()]
+
+
 def application(env, start_response):
     start_response('200 OK', [
         ('Content-Type','text/json'),
         ('Content-Disposition', 'inline; filename="easylist.json"'),
     ])
     d = parse_qs(env["QUERY_STRING"])
+    if "guid" not in d:
+        return error("Parameter guid required")
     guid = d["guid"][0]
-    row = db.get_row(guid)
-    result = get_transactions(row)
-    db.put_row(row)
-    return [json.dumps(result).encode()]
+    if guidhelper.validate_uuid4(guid):
+        return error("Parameter guid must be a valid guid")
+    try:
+        row = db.get_row(guid)
+        result = get_transactions(row)
+        db.put_row(row)
+        return [json.dumps(result).encode()]
+    except Exception as e:
+        return error(str(e))
