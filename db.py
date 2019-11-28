@@ -1,12 +1,12 @@
 import psycopg2
 import psycopg2.extras
 
-import secret
+import settings
 
 
 def get_cursor():
     db = psycopg2.connect("dbname='easylist' user='backend' " +
-        f"host='127.0.0.1' password='{secret.get_db_password()}'")
+        f"host='127.0.0.1' password='{settings.get_db_password()}'")
     db.autocommit = True
     return db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 

@@ -5,7 +5,7 @@ import uuid
 from cgi import parse_qs
 
 import db
-import secret
+import settings
 
 
 def error(message):
@@ -63,7 +63,7 @@ def application(env, start_response):
             "code": code,
             "redirect_uri": "https://easylist.aule.net/",
             "client_id": "88ad9f89f0081f7d17a9552a7ff8403b48882a521dcd5a7d7229aab16e721386",
-            "client_secret": secret.get_client_secret()
+            "client_secret": settings.get_client_secret()
         }).json()
         if "error" in response:
             return [json.dumps(response).encode()]
