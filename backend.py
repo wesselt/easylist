@@ -37,6 +37,8 @@ def application(env, start_response):
         return error("Parameter guid must be a valid guid")
     code = d["code"][0] if "code" in d else ""
     row = db.get_row(guid)
+    if not row:
+        row = db.new_row(guid)
     if code and not row["code"]:
         row["code"] = code
         db.put_row(row)

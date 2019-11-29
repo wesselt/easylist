@@ -11,20 +11,24 @@ def get_cursor():
     return db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
  
-def get_row(guid):
-    cur = get_cursor()
-    cur.execute("select * from get_row(%s)", (guid, ))
-    rows = cur.fetchall()
-    if not rows:
-      return {
+def new_row(guid):
+    return {
         "guid": guid,
         "code": None,
         "bearer": None,
         "private_key": None,
         "installation_token": None,
         "session_token": None,
-      }
-    return rows[0]
+    }
+
+
+def get_row(guid):
+    cur = get_cursor()
+    cur.execute("select * from get_row(%s)", (guid, ))
+    row = cur.fetchone()
+    if not row:
+        return None
+    return row
 
 
 def put_row(row):

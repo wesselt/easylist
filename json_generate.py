@@ -65,8 +65,10 @@ def application(env, start_response):
     guid = d["guid"][0]
     if guidhelper.validate_uuid4(guid):
         return error("Parameter guid must be a valid guid")
+    row = db.get_row(guid)
+    if not row:
+        return error(f"Unknown guid {guid}")
     try:
-        row = db.get_row(guid)
         result = get_transactions(row)
         db.put_row(row)
         return [json.dumps(result).encode()]
