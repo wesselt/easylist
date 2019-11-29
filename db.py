@@ -25,10 +25,7 @@ def new_row(guid):
 def get_row(guid):
     cur = get_cursor()
     cur.execute("select * from get_row(%s)", (guid, ))
-    row = cur.fetchone()
-    if not row:
-        return None
-    return row
+    return cur.fetchone()
 
 
 def put_row(row):
