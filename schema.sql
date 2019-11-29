@@ -86,7 +86,6 @@ begin
         token.code = par_code;
     end if;
     if token.bearer is null and par_code is not null then
-        raise notice 'I got here';
         token.bearer = par_bearer;
     end if;
     if token.private_key is null and par_bearer is not null then
