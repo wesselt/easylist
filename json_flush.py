@@ -83,9 +83,9 @@ def main(d, guid, row, env, start_response):
         ('Content-Type','text/json'),
     ])
     if "source" not in d:
-        return {"error": "Parameter source must contain am IBAN"}
+        return {"error": "Parameter source must contain a bunq IBAN"}
     source = d["source"][0]
     if "target" not in d:
-        return {"error": "Parameter target must contain am IBAN"}
+        return {"error": "Parameter target must contain a bunq IBAN"}
     target = d["target"][0]
     return flush(row, source, target)
