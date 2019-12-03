@@ -6,7 +6,6 @@ import sys
 import db
 import guidhelper
 import json_balance
-import json_flush
 import json_transactions
 import json_transfer
 
@@ -24,8 +23,6 @@ def call_main(d, guid, row, env, start_response):
         action = d["action"][0]
         if action == "balance":
             return json_balance.main(d, guid, row, env, start_response)
-        elif action == "flush":
-            return json_flush.main(d, guid, row, env, start_response)
         elif action == "transfer":
             return json_transfer.main(d, guid, row, env, start_response)
         return f"Unknown action {action}"

@@ -53,6 +53,14 @@ def transfer(row, source_name, target_name, amount, description):
     if not target:
         return {"error": f"No account matches target {target_name}"}
 
+    if amount == "all":
+        amount = source["value"]
+        if Decimal(amount) <= 0:
+            return {"error": f"There is no money in the source account"}
+
+    if Decimal(source["value"]) < Decimal(amount):
+        return {"error": f"There is not enough money in the source account"}
+
     # Move balance to target account
     method = (f"v1/user/{source['user_id']}/monetary-account/" +
               f"{source['account_id']}/payment")
@@ -88,12 +96,14 @@ def main(d, guid, row, env, start_response):
     target = d["target"][0]
     if "amount" not in d:
         return {"error": "Parameter amount missing"}
-    try:
-        amount = Decimal(d["amount"][0])
-    except:
-        return {"error": "Parameter amount is not a number"}
-    if amount <= 0:
-        return {"error": "Parameter amount is not positive"}
+    amount = d["amount"][0]
+    if amount != "all":
+        try:
+            amount_dec = Decimal(amount)
+        except:
+            return {"error": "Parameter amount is not a number"}
+        if amount_dec <= 0:
+            return {"error": "Parameter amount is not positive"}
     if "description" not in d:
         description = "Easylist account transfer"
     else:

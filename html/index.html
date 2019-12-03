@@ -106,10 +106,14 @@
           </a>
           <br/>
           <br/>
-          <h5>You can also transfer money between accounts you own:</h5>
+          <h5>You can also list the balances of your accounts:</h5>
+          <a id="url_balance" target="_blank"></a>
+          <br/>
+          <br/>
+          <h5>Or transfer money between accounts you own:</h5>
           <a id="url_transfer" target="_blank"></a>
           <br/>
-          <a id="url_flush" target="_blank"></a>
+          Use the amount "all" to transfer the entire balance of an account.
         </div>
       </div>
       <div class="row">
@@ -173,7 +177,7 @@ $(window).on('load', function() {
         $('body').css('background-color', 'lightyellow');
     } else if (config["url"] === config["prod_url"]) {
         $('#version').html('This is the production version, here is the ' +
-            '<a href="' + config["sandbox_url"] + '">sandboxversion</a>.');
+            '<a href="' + config["sandbox_url"] + '">sandbox version</a>.');
     } else {
         $('body').css('background-colo', 'red');
     }
@@ -194,18 +198,16 @@ $(window).on('load', function() {
             var json_url = config["url"] + 'json?guid=' + guid;
             $('#url_json').append(json_url);
             $('#url_json').attr("href", json_url);
+            var json_balance = config["url"] + 'json?guid=' + guid +
+                '&action=balance';
+            $('#url_balance').append(json_balance);
+            $('#url_balance').attr("href", json_balance);
             var json_transfer = config["url"] + 'json?guid=' + guid +
                 '&action=transfer' +
                 '&source=SourceIban&target=TargetIban' +
                 '&amount=0.01&description=EasylistTransfer';
             $('#url_transfer').append(json_transfer);
             $('#url_transfer').attr("href", json_transfer);
-            var json_flush = config["url"] + 'json?guid=' + guid +
-                '&action=flush' +
-                '&source=SourceIban&target=TargetIban' +
-                '&description=EasylistFlush';
-            $('#url_flush').append(json_flush);
-            $('#url_flush').attr("href", json_flush);
             // Display result block
             $('#row_urls').css('display', 'block');
           } else {
