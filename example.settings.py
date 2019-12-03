@@ -8,8 +8,16 @@ def get_connection_string():
    return "your postgres connection string here"
 
 def get_url():
-    return "https://easylist.aule.net/"
-    #return "https://easylist.aule.net/sandbox/"
+    return get_prod_url()
+
+def get_dev_url():
+   return "https://easylist.aule.net/dev/"
+
+def get_sandbox_url():
+   return "https://easylist.aule.net/sandbox/"
+
+def get_prod_url():
+   return "https://easylist.aule.net/"
 
 def get_bunq_url():
     return "https://api.bunq.com/"
