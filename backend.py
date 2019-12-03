@@ -28,6 +28,7 @@ def application(env, start_response):
         return [json.dumps({
             "new_guid": guidhelper.new_guid(),
             "client_id": settings.get_client_id(),
+            "oauth_url": settings.get_oauth_url(),
             "url": settings.get_url(),
         }).encode()]
     if "guid" not in d:
@@ -45,7 +46,7 @@ def application(env, start_response):
     if not row.get("bearer"):
         if not code:
             return error("Parameter code required for guid without bearer")
-        url = "https://api.oauth.bunq.com/v1/token"
+        url = settings.get_token_url() + "v1/token"
         response = requests.post(url, params={
             "grant_type": "authorization_code",
             "code": code,

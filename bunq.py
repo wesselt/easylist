@@ -7,8 +7,7 @@ import socket
 import sys
 
 import db
-
-url = "https://api.bunq.com/"
+import settings
 
 
 # 1 to log http calls, 2 to include headers
@@ -160,6 +159,7 @@ def call_requests(row, action, method, data_obj):
     }
     sign(row, action, method, headers, data)
     log_request(action, method, headers, data_obj)
+    url = settings.get_bunq_url()
     if action == "GET":
         reply = requests.get(url + method, headers=headers)
     elif action == "POST":

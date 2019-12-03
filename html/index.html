@@ -150,7 +150,7 @@ $(window).on('load', function() {
     alert("<strong>An error occured:</strong> " + error);
   }
   $.getJSON('backend?get_config=1', function(config) {
-    var url = 'https://oauth.bunq.com/auth?' +
+    var url = config["oauth_url"] + 'auth?' +
               'response_type=code&' +
               'client_id=' + config["client_id"] + '&' +
               'redirect_uri=' + config["url"] + '&' +
