@@ -5,6 +5,7 @@ import sys
 
 import db
 import guidhelper
+import json_balance
 import json_flush
 import json_transactions
 
@@ -22,6 +23,8 @@ def call_main(d, guid, row, env, start_response):
         action = d["action"][0]
         if action == "flush":
             return json_flush.main(d, guid, row, env, start_response)
+        elif action == "balance":
+            return json_balance.main(d, guid, row, env, start_response)
         return f"Unknown action {action}"
     # Return transactions by default
     return json_transactions.main(d, guid, row, env, start_response)
@@ -41,7 +44,7 @@ def application(env, start_response):
         result = call_main(d, guid, row, env, start_response)
         if isinstance(result, str):
             return error(start_response, result)
-        return [json.dumps(result).encode()]
+        return [json.dumps(result, indent=4).encode()]
     except:
         exc_type, exc_value, exc_tb = sys.exc_info()
         start_response('200 OK', [
