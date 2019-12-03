@@ -4,8 +4,8 @@ def get_client_id():
 def get_client_secret():
     return "your client secret here"
 
-def get_db_password():
-   return "your db password here"
+def get_connection_string():
+   return "your postgres connection string here"
 
 def get_url():
     return "https://easylist.aule.net/"
