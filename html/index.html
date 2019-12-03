@@ -104,6 +104,12 @@
           <a id="url_json" target="_blank">
             <img src="img/json.png" height="50px">
           </a>
+          <br/>
+          <br/>
+          <h5>You can also transfer money between accounts you own:</h5>
+          <a id="url_transfer" target="_blank"></a>
+          <br/>
+          <a id="url_flush" target="_blank"></a>
         </div>
       </div>
       <div class="row">
@@ -188,7 +194,19 @@ $(window).on('load', function() {
             var json_url = config["url"] + 'json?guid=' + guid;
             $('#url_json').append(json_url);
             $('#url_json').attr("href", json_url);
-            //$('#row_sheet, #row_python, #row_button').css('display', 'none');
+            var json_transfer = config["url"] + 'json?guid=' + guid +
+                '&action=transfer' +
+                '&source=SourceIban&target=TargetIban' +
+                '&amount=0.01&description=EasylistTransfer';
+            $('#url_transfer').append(json_transfer);
+            $('#url_transfer').attr("href", json_transfer);
+            var json_flush = config["url"] + 'json?guid=' + guid +
+                '&action=flush' +
+                '&source=SourceIban&target=TargetIban' +
+                '&description=EasylistFlush';
+            $('#url_flush').append(json_flush);
+            $('#url_flush').attr("href", json_flush);
+            // Display result block
             $('#row_urls').css('display', 'block');
           } else {
             alert(result["error"]);

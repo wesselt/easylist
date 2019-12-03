@@ -8,6 +8,7 @@ import guidhelper
 import json_balance
 import json_flush
 import json_transactions
+import json_transfer
 
 
 def error(start_response, message):
@@ -21,10 +22,12 @@ def error(start_response, message):
 def call_main(d, guid, row, env, start_response):
     if "action" in d:
         action = d["action"][0]
-        if action == "flush":
-            return json_flush.main(d, guid, row, env, start_response)
-        elif action == "balance":
+        if action == "balance":
             return json_balance.main(d, guid, row, env, start_response)
+        elif action == "flush":
+            return json_flush.main(d, guid, row, env, start_response)
+        elif action == "transfer":
+            return json_transfer.main(d, guid, row, env, start_response)
         return f"Unknown action {action}"
     # Return transactions by default
     return json_transactions.main(d, guid, row, env, start_response)

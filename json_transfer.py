@@ -44,7 +44,7 @@ def find_account(accounts, name):
             return a
 
 
-def flush(row, source_name, target_name, description):
+def transfer(row, source_name, target_name, amount, description):
     accounts = collect_accounts(row)
     source = find_account(accounts, source_name)
     if not source:
@@ -53,15 +53,12 @@ def flush(row, source_name, target_name, description):
     if not target:
         return {"error": f"No account matches target {target_name}"}
 
-    if Decimal(source["value"]) <= 0:
-        return {"error": "There is no money in the source account"}
-
     # Move balance to target account
     method = (f"v1/user/{source['user_id']}/monetary-account/" +
               f"{source['account_id']}/payment")
     data = {
         "amount": {
-            "value": source["value"],
+            "value": str(amount),
             "currency": source["currency"]
         },
         "counterparty_alias": {
@@ -74,8 +71,8 @@ def flush(row, source_name, target_name, description):
     bunq.post(row, method, data)
     return {
         "success": "success",
-        "message": f"Flushed {source['value']} {source['currency']} from " +
-          f"{source['iban']} to {target['iban']}"
+        "message": f"Transferred {amount} {source['currency']} " +
+          f"from {source['iban']} to {target['iban']}"
     }
 
 
@@ -89,8 +86,16 @@ def main(d, guid, row, env, start_response):
     if "target" not in d:
         return {"error": "Parameter target must contain a bunq IBAN"}
     target = d["target"][0]
+    if "amount" not in d:
+        return {"error": "Parameter amount missing"}
+    try:
+        amount = Decimal(d["amount"][0])
+    except:
+        return {"error": "Parameter amount is not a number"}
+    if amount <= 0:
+        return {"error": "Parameter amount is not positive"}
     if "description" not in d:
-        description = "Easylist account flush"
+        description = "Easylist account transfer"
     else:
         description = d["description"][0]    
-    return flush(row, source, target, description)
+    return transfer(row, source, target, amount, description)
