@@ -30,6 +30,9 @@ def application(env, start_response):
             "client_id": settings.get_client_id(),
             "oauth_url": settings.get_oauth_url(),
             "url": settings.get_url(),
+            "dev_url": settings.get_dev_url(),
+            "sandbox_url": settings.get_sandbox_url(),
+            "prod_url": settings.get_prod_url(),
         }).encode()]
     if "guid" not in d:
         return error("Parameter guid required")

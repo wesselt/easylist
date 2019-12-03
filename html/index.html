@@ -110,6 +110,7 @@
         <div style="color:gray; ">
         <br/>
         <br/>
+        <div id="version"></div>
         <a href="https://github.com/wesselt/easylist/issues">Feedback welcome</a> at
         <a href="https://github.com/wesselt/easylist">github</a>.
         </div>
@@ -157,6 +158,19 @@ $(window).on('load', function() {
               'state=' + config["new_guid"];
     $('#btn').attr('href', url);
     $('#home').attr('href', config["url"]);
+    if (config["url"] === config["dev_url"]) {
+        $('#version').html('This is the development version');
+        $('body').css('background-color', 'silver');
+    } else if (config["url"] === config["sandbox_url"]) {
+        $('#version').html('This is the sandbox version, here is the ' +
+            '<a href="' + config["prod_url"] + '">production version</a>.');
+        $('body').css('background-color', 'lightyellow');
+    } else if (config["url"] === config["prod_url"]) {
+        $('#version').html('This is the production version, here is the ' +
+            '<a href="' + config["sandbox_url"] + '">sandboxversion</a>.');
+    } else {
+        $('body').css('background-colo', 'red');
+    }
 
     if (!error) {
       var guid = getUrlParameter("state");
