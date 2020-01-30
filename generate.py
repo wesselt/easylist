@@ -53,7 +53,7 @@ def get_transactions(row):
 
 
 def error(message):
-    return f"Error: {message}"
+    return f"Error: {message}\n"
 
 
 def application(env, start_response):
@@ -75,4 +75,4 @@ def application(env, start_response):
         db.put_row(row)
         return [result.encode()]
     except Exception as e:
-        return error(str(e))
+        return [error(str(e)).encode()]
