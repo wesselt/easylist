@@ -152,10 +152,6 @@ def call_requests(row, action, method, data_obj):
     headers = {
         'Cache-Control': 'no-cache',
         'User-Agent': 'easylist',
-        'X-Bunq-Client-Request-Id': '0',
-        'X-Bunq-Geolocation': '0 0 0 0 NL',
-        'X-Bunq-Language': 'en_US',
-        'X-Bunq-Region': 'nl_NL'
     }
     sign(row, action, method, headers, data)
     log_request(action, method, headers, data_obj)
