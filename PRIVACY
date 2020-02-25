@@ -1,0 +1,44 @@
+Easylist Privacy Policy
+=======================
+
+The goal of this website is to facilitate access to a few functions of the
+BUNQ API.  The facilitated access is provided through an URL with a unique
+identifier (GUID).  This website collects as little data as possible to
+facilitate this access.  This page details the information that is stored and 
+used after you've linked your BUNQ account.
+
+Information Stored
+------------------
+- The URL identified by its GUID
+- The BUNQ tokens BUNQ sends us through OAUTH (code, bearer, installation, 
+  session, etc)
+- The time an URL is created and updated
+
+Information Not Stored (not even in log files)
+----------------------------------------------
+- BUNQ transactions
+- BUNQ account information (IBANS, balance, names, etc)
+
+This information is requested from the BUNQ API but not stored beyond the time
+it takes to answer an HTTP request.
+
+Third Parties
+-------------
+No data is sent to a third party.  Easylist does not use any analytics
+service or third party tracker.
+
+Log Files
+---------
+Log files aid in troubleshooting and debugging.  For example, the nginx log
+contains incoming HTTP calls.  The mod_uswgi log contain debug output from
+the Python module. Log files are kept for 14 days or less.
+
+Source Code
+-----------
+Easylist is open source and the source code is available at:
+https://github.com/wesselt/easylist
+
+License
+-------
+Easylist is made available under the GNU General Public License:
+https://github.com/wesselt/easylist/blob/master/LICENSE
