@@ -5,6 +5,8 @@ def get_client_secret():
     return "your client secret here"
 
 def get_connection_string():
+   # Example connection string:
+   # "host='127.0.0.1' dbname='easylist' user='goofy' password='topsecret'"
    return "your postgres connection string here"
 
 def get_url():
