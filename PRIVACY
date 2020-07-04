@@ -10,9 +10,9 @@ used after you've linked your BUNQ account.
 Information Stored
 ------------------
 - The URL identified by its GUID
-- The BUNQ tokens BUNQ sends us through OAUTH (code, bearer, installation, 
+- The BUNQ tokens BUNQ sends for OAUTH (code, bearer, installation, 
   session, etc)
-- The time an URL is created and updated
+- The time a URL is created and updated
 
 Information Not Stored (not even in log files)
 ----------------------------------------------
