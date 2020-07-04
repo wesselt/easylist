@@ -115,6 +115,7 @@
           <a id="url_transfer" target="_blank"></a>
           <br/>
           Use the amount "all" to transfer the entire balance of an account.
+          Use "keep" to leave a minimum amount in the source account.
         </div>
       </div>
       <div class="row">
@@ -122,11 +123,10 @@
         <br/>
         <br/>
         Easylist stores as little information as possible.  
-        <a href="https://github.com/wesselt/easylist/blob/master/PRIVACY">
-            Read the privacy policy</a>.
+        <a href="https://raw.githubusercontent.com/wesselt/easylist/master/PRIVACY">Read the privacy policy</a>.
         <div id="version"></div>
-        <a href="https://github.com/wesselt/easylist/issues">Feedback welcome</a>
-            at <a href="https://github.com/wesselt/easylist">github</a>.
+        <a href="https://github.com/wesselt/easylist/issues">Feedback welcome</a> at
+        <a href="https://github.com/wesselt/easylist">github</a>.
         </div>
       </div>
     </div>
@@ -209,7 +209,7 @@ $(window).on('load', function() {
             var json_transfer = config["url"] + 'json?guid=' + guid +
                 '&action=transfer' +
                 '&source=SourceIban&target=TargetIban' +
-                '&amount=0.01&description=EasylistTransfer';
+                '&amount=0.01&keep=0.00&description=EasylistTransfer';
             $('#url_transfer').append(json_transfer);
             $('#url_transfer').attr("href", json_transfer);
             // Display result block

@@ -103,8 +103,11 @@ def sign(row, action, method, headers, data):
     if not (method.startswith("v1/device-server") or
             method.startswith("v1/session-server")):
         headers['X-Bunq-Client-Authentication'] = get_session_token(row)
-        return
-    headers['X-Bunq-Client-Authentication'] = get_installation_token(row)
+        if not (action == "POST" and method.endswith("/payment")):
+            return
+    else:
+        headers['X-Bunq-Client-Authentication'] = get_installation_token(row)
+
     # Device-server and session-server must be signed
     private_key = get_private_key(row)
     sig = crypto.sign(private_key, data, 'sha256')
