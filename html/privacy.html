@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <title>Easylist Privacy Policy</title>
+  </head>
+  <body>
+    <div class="container" style="font-family: monospace; white-space:pre;">
+Easylist Privacy Policy
+=======================
+
+The goal of this website is to facilitate access to a few functions of the
+BUNQ API.  The facilitated access is provided through an URL with a unique
+identifier (GUID).  The website can create a Google sheet that talks to the
+BUNQ API through the Easylist backend.
+
+This website collects as little data as possible to facilitate this access.
+This page details the information that is stored and used after you've linked
+your BUNQ account and optionally your Google account.
+
+Information Stored
+------------------
+- The BUNQ tokens BUNQ sends for OAUTH (code, bearer, installation, 
+  session, etc)
+- The time a URL is created and updated
+
+Information Not Stored
+----------------------
+BUNQ data is requested from the BUNQ API and only kept for the duration of an 
+HTTP request.  It's not stored in the Easylist database.
+- BUNQ transactions
+- BUNQ account information (IBANS, balance, names, etc)
+
+Easylist can create a Google sheet.  To do so, it requests a Google token.
+This token is kept in memory for the duration of the HTTP request and is not
+stored in the database.
+
+Third Parties
+-------------
+No data is sent to a third party.  Easylist does not use any analytics
+service or third party tracker.
+
+Log Files
+---------
+Log files aid in troubleshooting and debugging.  For example, the nginx log
+contains incoming HTTP calls.  The mod_uswgi log contain debug output from
+the Python module. Log files are kept for 14 days or less.
+
+Source Code
+-----------
+Easylist is open source and the source code is available at:
+https://github.com/wesselt/easylist
+
+License
+-------
+Easylist is made available under the GNU General Public License:
+https://github.com/wesselt/easylist/blob/master/LICENSE
+    </div>
+  </body>
+</html>
