@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <title>Easylist Privacy Policy</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row" id="row_sheet">
+        <div class="col-xs alert alert-warning">
+          <h5>Easylist encountered a problem</h5>
+          <div id="alert_text"></div>
+          <br/>
+          <br/>
+          <a class="btn btn-success btn-lg" role="button" href="index.html">
+              Home
+          </a>
+          <a id="btn_retry" class="btn btn-info btn-lg" role="button"
+                  style="display: none; ">
+              Retry
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+var getUrlParameter = function getUrlParameter(sParam) {
+  var sPageURL = window.location.search.substring(1),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+    sParameterName = sURLVariables[i].split('=');
+
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+    }
+  }
+};
+
+$(window).on('load', function() {
+    var error = getUrlParameter("error");
+    if (error) {
+        $("#alert_text").text(error);
+    } else {
+        $("#alert_text").text("No error details found.");
+    }
+    var retry = getUrlParameter("retry");
+    if (retry) {
+        $("#btn_retry").attr("href", retry).css("display", "inline");
+    }
+});
+    </script>
+  </body>
+</html>
