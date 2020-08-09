@@ -4,6 +4,9 @@ def get_client_id():
 def get_client_secret():
     return "your client secret here"
 
+def get_app_credentials():
+    return json.loads('Goole oauth credentials JSON here')
+    
 def get_connection_string():
    # Example connection string:
    # "host='127.0.0.1' dbname='easylist' user='goofy' password='topsecret'"

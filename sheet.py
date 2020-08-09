@@ -33,7 +33,7 @@ def request_bunq_oauth(env, start_response):
     url = (settings.get_oauth_url() + 'auth?' +
            'response_type=code&' +
            'client_id=' + settings.get_client_id() + '&' +
-           'redirect_uri=' + settings.get_sheet_url() + '&' +
+           'redirect_uri=' + settings.get_url() + 'sheet&' +
            'state=' + guidhelper.new_guid())
     start_response('302 Found', [('Location', url)])
     return []
