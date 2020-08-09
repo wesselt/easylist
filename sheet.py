@@ -110,6 +110,7 @@ class Sheet:
         spreadsheet = service.spreadsheets().create(body=spreadsheet,
                                fields='spreadsheetId,spreadsheetUrl').execute()
         spreadsheet_id = spreadsheet.get("spreadsheetId")
+
         csv_url = settings.get_url() + "generate?guid=" + self.guid
         body = {
             "values": [
@@ -122,6 +123,33 @@ class Sheet:
             valueInputOption="USER_ENTERED",
             body=body)
         response = request.execute()
+
+        body = {
+          "requests": [
+             {
+               "repeatCell": {
+                 "range": {
+                   "sheetId": 0,
+                   "startColumnIndex": 2,
+                   "endColumnIndex": 3
+                 },
+                 "cell": {
+                   "userEnteredFormat": {
+                     "numberFormat": {
+                       "type": "DATE"
+                     }
+                   }
+                 },
+                 "fields": "userEnteredFormat.numberFormat"
+              }
+            }
+          ]
+        }
+        request = service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body=body)
+        response = request.execute()
+
         sheet_url = spreadsheet.get("spreadsheetUrl")
         self.start_response('302 Found', [('Location', sheet_url)])
         return []
