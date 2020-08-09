@@ -2,7 +2,7 @@ import json
 import requests
 import sys
 import threading
-from cgi import parse_qs
+from urllib.parse import parse_qs
 
 import bunq
 import db
