@@ -37,7 +37,7 @@ def application(env, start_response):
     if "guid" not in d:
         return error("Parameter guid required")
     guid = d["guid"][0]
-    if guidhelper.validate_uuid4(guid):
+    if not guidhelper.validate_uuid4(guid):
         return error("Parameter guid must be a valid guid")
     code = d["code"][0] if "code" in d else ""
     row = db.get_row(guid)

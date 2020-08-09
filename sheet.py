@@ -159,7 +159,7 @@ class Sheet:
         if not "state" in d:
             return self.request_bunq_oauth()
         self.guid = d["state"][0]
-        if guidhelper.validate_uuid4(self.guid):
+        if not guidhelper.validate_uuid4(self.guid):
             return self.error("State must be a valid guid")
         self.row = db.get_row(self.guid)
         if "error" in d:
