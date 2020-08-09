@@ -3,6 +3,7 @@ from decimal import Decimal
 import json
 import sys
 from cgi import parse_qs
+from pprint import pprint
 
 import bunq
 import db
@@ -12,25 +13,38 @@ import guidhelper
 bunq.set_log_level(0)
 
 
+def payment_to_line(payment):
+    return "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}".format(
+        payment["amount"]["value"],
+        payment["amount"]["currency"],
+        payment["created"][:16],
+        payment["type"],
+        payment["sub_type"],
+        payment["description"],
+        payment["alias"]["iban"],
+        payment["alias"]["display_name"],
+        payment["counterparty_alias"]["iban"],
+        payment["counterparty_alias"]["display_name"]
+    )
+
+
+def process_payments(payments):
+    result = []
+    for v in [p["Payment"] for p in payments]:
+        result.append(payment_to_line(v))
+    return result
+
+
 def process_account(row, user_id, account_id):
-    result = ""
-    method = ("v1/user/{0}/monetary-account/{1}/payment?count=128"
+    method = ("v1/user/{0}/monetary-account/{1}/payment?count=200"
               .format(user_id, account_id))
     payments = bunq.get(row, method)
-    for v in [p["Payment"] for p in payments]:
-        result += "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}\n".format(
-            v["amount"]["value"],
-            v["amount"]["currency"],
-            v["created"][:16],
-            v["type"],
-            v["sub_type"],
-            v["description"],
-            v["alias"]["iban"],
-            v["alias"]["display_name"],
-            v["counterparty_alias"]["iban"],
-            v["counterparty_alias"]["display_name"]
-        )
-    return result 
+    result = process_payments(payments)
+    while bunq.has_previous():
+        payments = bunq.previous(row)
+        pprint(result)
+        result.extend(process_payments(payments))
+    return "\n".join(result)
 
 
 def process_user(row, user_id):

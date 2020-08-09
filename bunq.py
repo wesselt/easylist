@@ -13,6 +13,9 @@ import settings
 # 1 to log http calls, 2 to include headers
 log_level = 0
 
+# Pagination
+older_url = None
+
 
 # -----------------------------------------------------------------------------
 
@@ -179,6 +182,8 @@ def call(row, action, method, data=None):
             return result
     if "Error" in result:
         raise Exception(result["Error"][0]["error_description"])
+    global older_url
+    older_url = result.get("Pagination", {}).get("older_url")
     return result["Response"]
 
 
@@ -191,6 +196,17 @@ def set_log_level(level):
 
 def get(row, method):
     return call(row, 'GET', method)
+
+
+def has_previous():
+    return older_url is not None
+
+
+def previous(row):
+    if not older_url:
+        return []
+    return call(row, 'GET', older_url.lstrip("/"))
+
 
 def post(row, method, data):
     return call(row, 'POST', method, data)
